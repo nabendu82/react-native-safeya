@@ -1,43 +1,48 @@
+import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Image, Pressable, ImageBackground } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import CustomButton from './components/CustomButton'
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
-const App = () => {
-  const [name, setName] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const onPressHandler = () => setSubmitted(!submitted)
+const Stack = createStackNavigator();
+
+const FirstScreen = ({ navigation }) => {
+  const onPressHandler = () => navigation.navigate('Second');
 
   return (
-    <SafeAreaView style={{ flex: 1}}>
-      <ImageBackground source={{ uri: 'https://i.pinimg.com/originals/45/ce/29/45ce2986d79fc7cd05014bd522a88834.jpg'}} style={styles.container}>
-        <Text style={styles.text}>Enter Name: </Text>
-        <TextInput 
-          style={styles.inputBox}
-          placeholder='Enter your four digit OTP'
-          onChangeText={text => setName(text)}
-          keyboardType='numeric'
-          maxLength={4}
-          secureTextEntry={true}
-        />
-        <CustomButton pressFunction={onPressHandler} title={submitted ? 'Clear' : 'Submit'}/>
-        {submitted ?
-          <View style={styles.container}>
-            <Text style={styles.text}>You Entered - {name}</Text>
-            <Image style={styles.image} source={require('./assets/done.png')} resizeMode='cover' />
-          </View>
-          :
-          <Image style={styles.image} source={require('./assets/error.png')} resizeMode='contain' />
-        }
-      </ImageBackground>
-    </SafeAreaView>
+    <View style={styles.body}>
+      <Text style={styles.text}>First Screen</Text>
+      <CustomButton pressFunction={onPressHandler} title='Go Second'/>
+    </View>
+  )
+}
+
+const SecondScreen = ({ navigation }) => {
+  const onPressHandler = () => navigation.goBack();
+
+  return (
+    <View style={styles.body}>
+      <Text style={styles.text}>Second Screen</Text>
+      <CustomButton pressFunction={onPressHandler} title='Go First'/>
+    </View>
+  )
+}
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='First' component={FirstScreen} options={{ header: () => null }}/>
+        <Stack.Screen name='Second' component={SecondScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center' },
-  inputBox: { width: 300, borderWidth: 1, borderColor: '#555', borderRadius: 5, textAlign: 'center', fontSize: 20, padding: 10, marginBottom: 10 },
-  text: { fontSize: 30, fontWeight: 'bold', padding: 10 },
-  image: { width: 100, height: 100, margin: 10 }
+  body: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  text: { fontSize: 40, fontWeight: 'bold', margin: 10 },
 })
 
 export default App
