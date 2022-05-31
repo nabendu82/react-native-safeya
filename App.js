@@ -1,34 +1,25 @@
 import 'react-native-gesture-handler';
 import { StyleSheet, SafeAreaView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
-import FirstScreen from './components/FirstScreen';
-import SecondScreen from './components/SecondScreen';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginComponent from './components/LoginComponent';
+import HomeComponent from './components/HomeComponent';
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
-      <Drawer.Navigator
-          initialRouteName="First"
-          drawerPosition='left'
-          drawerType="front"
-          edgeWidth={100}
-          hideStatusBar={false}
-          overlayColor='#00000090'
-          drawerStyle={{
-            backgroundColor: '#e6e6e6',
-            width: 250
-          }}
+      <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerTitleAlign: 'center', headerStyle: { backgroundColor: '#0080ff'},
+          headerTintColor: '#fff', headerTitleStyle: { fontSize: 25, fontWeight: 'bold' }}}
         >
-          <Drawer.Screen name='First' component={FirstScreen} options={{ header: () => null }}/>
-          <Drawer.Screen name='Second' component={SecondScreen} />
-        </Drawer.Navigator>
+          <Stack.Screen name='Login' component={LoginComponent} options={{ headerShown: false }}/>
+          <Stack.Screen name='Home' component={HomeComponent} />
+        </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
   )
 }
 
