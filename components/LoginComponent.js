@@ -1,13 +1,16 @@
 import { StyleSheet, TextInput, View } from 'react-native'
-import React, { useState, useEffect }  from 'react'
+import React, { useEffect }  from 'react'
 import CustomButton from './CustomButton'
 import SQLite from 'react-native-sqlite-storage'
+import { useSelector, useDispatch } from 'react-redux'
+import { setEmail, setName } from '../redux/actions'
 
 const db = SQLite.openDatabase({ name: 'MainDB', location: 'default' }, () => {}, error => console.log(error))
 
 const LoginComponent = ({ navigation }) => {
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
+    const { name, email } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         createTable();
     }, [])
@@ -25,6 +28,8 @@ const LoginComponent = ({ navigation }) => {
             alert('Please enter a name and email')
         } else {
             try {
+                dispatch(setName(name))
+                dispatch(setEmail(email))
                 await db.transaction(async tx => {
                     await tx.executeSql("INSERT INTO Users (Name, Email) VALUES (?, ?)", [name, email])
                 })
@@ -37,8 +42,8 @@ const LoginComponent = ({ navigation }) => {
 
     return (
         <View style={styles.body}>
-            <TextInput style={styles.input} placeholder='Enter name' value={name} onChangeText={value => setName(value)} />
-            <TextInput style={styles.input} placeholder='Enter email' value={email} onChangeText={value => setEmail(value)} />
+            <TextInput style={styles.input} placeholder='Enter name' value={name} onChangeText={value => dispatch(setName(value))} />
+            <TextInput style={styles.input} placeholder='Enter email' value={email} onChangeText={value => dispatch(setEmail(value))} />
             <CustomButton title='Login' pressFunction={setData} />
         </View>
     )

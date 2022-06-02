@@ -5,11 +5,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginComponent from './components/LoginComponent';
 import HomeComponent from './components/HomeComponent';
+import { Provider } from 'react-redux';
+import { Store } from './redux/store';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
+    <Provider store={Store}>
       <NavigationContainer>
       <Stack.Navigator
           initialRouteName="Login"
@@ -20,6 +23,7 @@ const App = () => {
           <Stack.Screen name='Home' component={HomeComponent} />
         </Stack.Navigator>
       </NavigationContainer>
+    </Provider>
   )
 }
 
